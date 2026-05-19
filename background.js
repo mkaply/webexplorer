@@ -362,6 +362,8 @@ function handleNavigation(details, opts) {
   }
 
   if (opts.fromHistoryState && cur && isSameDocCleanup(cur.url, details.url)) {
+    cur.url = details.url;
+    scheduleSave();
     log("nav", { ...baseLog, decision: "anchor-skip", nodeId: curId });
     return;
   }
