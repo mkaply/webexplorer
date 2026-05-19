@@ -1,7 +1,12 @@
 {
   "addons": {
     "webexplorer@kaply.com": {
-      "updates": []
+      "updates": [
+        {
+          "version": "0.1.1",
+          "update_link": "https://github.com/mkaply/webexplorer/releases/download/v0.1.1/webexplorer-v0.1.1.xpi"
+        }
+      ]
     }
   }
 }
