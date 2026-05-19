@@ -124,7 +124,7 @@ function isSameDocCleanup(curUrl, newUrl) {
 }
 
 function isStableFavicon(url) {
-  return !!url && !url.startsWith("data:");
+  return !!url && !url.startsWith("data:") && !url.startsWith("chrome://");
 }
 
 function shouldReplaceFavicon(current, incoming) {
