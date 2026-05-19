@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "WebExplorer",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "View your browsing history as a tree, in the spirit of IBM WebExplorer.",
   "browser_specific_settings": {
     "gecko": {
