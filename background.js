@@ -399,7 +399,7 @@ function handleNavigation(details, opts) {
       }
     } else if (opts.fromHistoryState && parentId === curId) {
       const sinceCommit = now - prevCommitAt;
-      const isHashAddition = !hasHash(cur.url) && hasHash(details.url);
+      const isHashAddition = !hasHash(cur.url) && hasHash(details.url) && isShallowHash(details.url);
       const window = isHashAddition ? HISTORY_STATE_HASH_ADD_MS : HISTORY_STATE_MERGE_MS;
       canMerge = sinceCommit < window;
     }
