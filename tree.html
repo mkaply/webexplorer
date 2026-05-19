@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>WebExplorer</title>
+  <link rel="icon" href="icons/webex.png">
+  <link rel="stylesheet" href="tree.css">
+</head>
+<body>
+  <header>
+    <h1>WebExplorer</h1>
+    <input id="search" type="search" placeholder="Filter by title or URL">
+    <div class="actions">
+      <button id="expand" title="Expand all branches">Expand</button>
+      <button id="collapse" title="Collapse all branches">Collapse</button>
+      <button id="refresh" title="Refresh from storage">Refresh</button>
+      <button id="mark" title="Toggle mark-broken mode (click nodes to flag them)">Mark</button>
+      <button id="report" title="Copy diagnostic report to clipboard" disabled>Report</button>
+      <button id="clear" class="danger" title="Clear all history">Clear</button>
+    </div>
+  </header>
+  <main id="tree"></main>
+  <script src="tree.js"></script>
+</body>
+</html>
