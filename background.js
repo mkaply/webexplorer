@@ -536,6 +536,7 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   } else if (
     !nodes[id].favIconUrl &&
     tab.favIconUrl &&
+    isStableFavicon(tab.favIconUrl) &&
     shouldReplaceFavicon(null, tab.favIconUrl)
   ) {
     nodes[id].favIconUrl = tab.favIconUrl;
