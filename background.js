@@ -129,8 +129,9 @@ function isStableFavicon(url) {
 
 function shouldReplaceFavicon(current, incoming) {
   if (!incoming) return false;
+  if (incoming.startsWith("chrome://")) return false;
   if (current === incoming) return false;
-  if (!current) return true;
+  if (!current || current.startsWith("chrome://")) return true;
   if (isStableFavicon(incoming) && !isStableFavicon(current)) return true;
   if (!isStableFavicon(incoming) && isStableFavicon(current)) return false;
   if (!isStableFavicon(incoming) && !isStableFavicon(current)) return false;
