@@ -10,7 +10,7 @@
       "strict_min_version": "115.0"
     }
   },
-  "permissions": ["webNavigation", "storage", "tabs"],
+  "permissions": ["history", "webNavigation", "storage", "tabs"],
   "background": {
     "scripts": ["background.js"]
   },

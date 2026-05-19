@@ -566,6 +566,48 @@ browser.tabs.onRemoved.addListener(tabId => {
   scheduleSave();
 });
 
+browser.history.onVisitRemoved.addListener(async removeInfo => {
+  await load();
+  if (removeInfo.allHistory) {
+    nodes = {};
+    tabCurrent = {};
+    tabHistory = {};
+    tabHistoryIndex = {};
+    lastCommitAt = {};
+    pendingOpener = {};
+    logBuffer = [];
+    await browser.storage.local.set({
+      [STORAGE_KEY]: nodes,
+      [TAB_STATE_KEY]: { tabCurrent, tabHistory, tabHistoryIndex, lastCommitAt, pendingOpener },
+      [LOG_KEY]: logBuffer
+    });
+    log("history-cleared", {});
+    return;
+  }
+  if (removeInfo.urls && removeInfo.urls.length) {
+    const urlSet = new Set(removeInfo.urls.map(normalizeUrl));
+    const removedIds = new Set();
+    for (const [id, n] of Object.entries(nodes)) {
+      if (urlSet.has(normalizeUrl(n.url))) {
+        removedIds.add(id);
+      }
+    }
+    for (const id of removedIds) {
+      for (const n of Object.values(nodes)) {
+        if (n.parentId === id) n.parentId = nodes[id].parentId || null;
+      }
+      delete nodes[id];
+      for (const tid of Object.keys(tabCurrent)) {
+        if (tabCurrent[tid] === id) delete tabCurrent[tid];
+      }
+    }
+    if (removedIds.size) {
+      log("history-removed", { count: removedIds.size });
+      scheduleSave();
+    }
+  }
+});
+
 browser.action.onClicked.addListener(async () => {
   try {
     const url = browser.runtime.getURL("tree.html");
