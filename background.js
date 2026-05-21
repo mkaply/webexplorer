@@ -329,7 +329,7 @@ function handleNavigation(details, opts) {
     quals
   };
 
-  if (opts.fromCommitted && tType === "reload") {
+  if (opts.fromCommitted && tType === "reload" && tabCurrent[tabId]) {
     log("nav", { ...baseLog, decision: "reload-skip" });
     return;
   }
@@ -466,19 +466,35 @@ browser.webNavigation.onCreatedNavigationTarget.addListener(async details => {
   }
 });
 
+async function seedTitleFromTab(tabId) {
+  const nodeId = tabCurrent[tabId];
+  if (!nodeId || !nodes[nodeId]) return;
+  if (nodes[nodeId].title !== nodes[nodeId].url) return;
+  try {
+    const tab = await browser.tabs.get(tabId);
+    if (tab.title && tab.title !== tab.url && samePage(tab.url, nodes[nodeId].url)) {
+      nodes[nodeId].title = tab.title;
+      scheduleSave();
+    }
+  } catch {}
+}
+
 browser.webNavigation.onCommitted.addListener(async details => {
   await load();
   handleNavigation(details, { fromCommitted: true });
+  seedTitleFromTab(details.tabId);
 });
 
 browser.webNavigation.onHistoryStateUpdated.addListener(async details => {
   await load();
   handleNavigation(details, { fromHistoryState: true });
+  seedTitleFromTab(details.tabId);
 });
 
 browser.webNavigation.onReferenceFragmentUpdated.addListener(async details => {
   await load();
   handleNavigation(details, { fromHistoryState: true });
+  seedTitleFromTab(details.tabId);
 });
 
 browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
