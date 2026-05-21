@@ -329,7 +329,8 @@ function handleNavigation(details, opts) {
     quals
   };
 
-  if (opts.fromCommitted && tType === "reload" && tabCurrent[tabId]) {
+  const hasRedirectQual = quals.includes("server_redirect") || quals.includes("client_redirect");
+  if (opts.fromCommitted && tType === "reload" && tabCurrent[tabId] && !hasRedirectQual) {
     log("nav", { ...baseLog, decision: "reload-skip" });
     return;
   }
@@ -349,7 +350,7 @@ function handleNavigation(details, opts) {
   } else if (opts.fromHistoryState) {
     parentId = tabCurrent[tabId] || null;
     parentSource = "current";
-  } else if (CHILD_TRANSITIONS.has(tType)) {
+  } else if (CHILD_TRANSITIONS.has(tType) || hasRedirectQual) {
     parentId = tabCurrent[tabId] || null;
     parentSource = "current";
   }
