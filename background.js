@@ -466,35 +466,41 @@ browser.webNavigation.onCreatedNavigationTarget.addListener(async details => {
   }
 });
 
-async function seedTitleFromTab(tabId) {
+async function seedFromTab(tabId) {
   const nodeId = tabCurrent[tabId];
   if (!nodeId || !nodes[nodeId]) return;
-  if (nodes[nodeId].title !== nodes[nodeId].url) return;
   try {
     const tab = await browser.tabs.get(tabId);
-    if (tab.title && tab.title !== tab.url && samePage(tab.url, nodes[nodeId].url)) {
+    if (!samePage(tab.url, nodes[nodeId].url)) return;
+    let changed = false;
+    if (nodes[nodeId].title === nodes[nodeId].url && tab.title && tab.title !== tab.url) {
       nodes[nodeId].title = tab.title;
-      scheduleSave();
+      changed = true;
     }
+    if (!nodes[nodeId].favIconUrl && tab.favIconUrl && shouldReplaceFavicon(null, tab.favIconUrl)) {
+      nodes[nodeId].favIconUrl = tab.favIconUrl;
+      changed = true;
+    }
+    if (changed) scheduleSave();
   } catch {}
 }
 
 browser.webNavigation.onCommitted.addListener(async details => {
   await load();
   handleNavigation(details, { fromCommitted: true });
-  seedTitleFromTab(details.tabId);
+  seedFromTab(details.tabId);
 });
 
 browser.webNavigation.onHistoryStateUpdated.addListener(async details => {
   await load();
   handleNavigation(details, { fromHistoryState: true });
-  seedTitleFromTab(details.tabId);
+  seedFromTab(details.tabId);
 });
 
 browser.webNavigation.onReferenceFragmentUpdated.addListener(async details => {
   await load();
   handleNavigation(details, { fromHistoryState: true });
-  seedTitleFromTab(details.tabId);
+  seedFromTab(details.tabId);
 });
 
 browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
