@@ -15,6 +15,7 @@ const INTERSTITIAL_PATTERNS = [
   /^https?:\/\/chatgpt\.com\/auth\/login\b/i,
   /^https?:\/\/[\w.-]*auth0\.com\/samlp\//i,
   /^https?:\/\/login\.microsoftonline\.com\//i,
+  /^https?:\/\/[\w.-]*\.microsoft\.com\/auth\/login\b/i,
   /^https?:\/\/[\w.-]*\.okta\.com\/login\/sessionCookieRedirect\b/i,
   /^https?:\/\/api\.workos\.com\/sso\//i
 ];
